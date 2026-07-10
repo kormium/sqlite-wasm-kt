@@ -15,6 +15,10 @@ on:
         description: "Git ref to publish from (release tag, e.g. v0.1.0, or a branch)."
         required: true
         default: main
+      publish_maven:
+        description: "Publish sqlite-wasm-kt to Maven Central (uncheck to re-run only the npm part)."
+        type: boolean
+        default: true
       publish_npm:
         description: "Also publish @kormium/sqlite-wasm-worker to npm (needs NPM_TOKEN)."
         type: boolean
@@ -40,6 +44,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Publish sqlite-wasm-kt to Maven Central Portal
+        if: inputs.publish_maven
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
