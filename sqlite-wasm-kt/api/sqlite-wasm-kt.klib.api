@@ -1,0 +1,54 @@
+// Klib ABI Dump
+// Targets: [wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <io.github.kormium:sqlite-wasm-kt>
+abstract interface io.github.kormium.sqlitewasm/SqliteWasmConnection { // io.github.kormium.sqlitewasm/SqliteWasmConnection|null[0]
+    abstract suspend fun <#A1: kotlin/Any?> query(kotlin/String, kotlin.collections/List<kotlin/Any?> = ..., kotlin/Function1<io.github.kormium.sqlitewasm/SqliteWasmRow, #A1>): kotlin.collections/List<#A1> // io.github.kormium.sqlitewasm/SqliteWasmConnection.query|query(kotlin.String;kotlin.collections.List<kotlin.Any?>;kotlin.Function1<io.github.kormium.sqlitewasm.SqliteWasmRow,0:0>){0§<kotlin.Any?>}[0]
+    abstract suspend fun close() // io.github.kormium.sqlitewasm/SqliteWasmConnection.close|close(){}[0]
+    abstract suspend fun execute(kotlin/String, kotlin.collections/List<kotlin/Any?> = ...): kotlin/Long // io.github.kormium.sqlitewasm/SqliteWasmConnection.execute|execute(kotlin.String;kotlin.collections.List<kotlin.Any?>){}[0]
+}
+
+abstract interface io.github.kormium.sqlitewasm/SqliteWasmRow { // io.github.kormium.sqlitewasm/SqliteWasmRow|null[0]
+    abstract val columnCount // io.github.kormium.sqlitewasm/SqliteWasmRow.columnCount|{}columnCount[0]
+        abstract fun <get-columnCount>(): kotlin/Int // io.github.kormium.sqlitewasm/SqliteWasmRow.columnCount.<get-columnCount>|<get-columnCount>(){}[0]
+
+    abstract fun columnName(kotlin/Int): kotlin/String // io.github.kormium.sqlitewasm/SqliteWasmRow.columnName|columnName(kotlin.Int){}[0]
+    abstract fun getBytes(kotlin/Int): kotlin/ByteArray? // io.github.kormium.sqlitewasm/SqliteWasmRow.getBytes|getBytes(kotlin.Int){}[0]
+    abstract fun getDouble(kotlin/Int): kotlin/Double? // io.github.kormium.sqlitewasm/SqliteWasmRow.getDouble|getDouble(kotlin.Int){}[0]
+    abstract fun getLong(kotlin/Int): kotlin/Long? // io.github.kormium.sqlitewasm/SqliteWasmRow.getLong|getLong(kotlin.Int){}[0]
+    abstract fun getRaw(kotlin/Int): kotlin/Any? // io.github.kormium.sqlitewasm/SqliteWasmRow.getRaw|getRaw(kotlin.Int){}[0]
+    abstract fun getString(kotlin/Int): kotlin/String? // io.github.kormium.sqlitewasm/SqliteWasmRow.getString|getString(kotlin.Int){}[0]
+}
+
+sealed interface io.github.kormium.sqlitewasm/SqliteWasmStorage { // io.github.kormium.sqlitewasm/SqliteWasmStorage|null[0]
+    final class Opfs : io.github.kormium.sqlitewasm/SqliteWasmStorage { // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs|null[0]
+        constructor <init>(kotlin/String) // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.<init>|<init>(kotlin.String){}[0]
+
+        final val path // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.path|{}path[0]
+            final fun <get-path>(): kotlin/String // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.path.<get-path>|<get-path>(){}[0]
+
+        final fun component1(): kotlin/String // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.kormium.sqlitewasm/SqliteWasmStorage.Opfs.toString|toString(){}[0]
+    }
+
+    final object InMemory : io.github.kormium.sqlitewasm/SqliteWasmStorage { // io.github.kormium.sqlitewasm/SqliteWasmStorage.InMemory|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.kormium.sqlitewasm/SqliteWasmStorage.InMemory.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.kormium.sqlitewasm/SqliteWasmStorage.InMemory.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.kormium.sqlitewasm/SqliteWasmStorage.InMemory.toString|toString(){}[0]
+    }
+}
+
+final class io.github.kormium.sqlitewasm/SqliteWasmException : kotlin/Exception { // io.github.kormium.sqlitewasm/SqliteWasmException|null[0]
+    constructor <init>(kotlin/String, kotlin/Throwable? = ...) // io.github.kormium.sqlitewasm/SqliteWasmException.<init>|<init>(kotlin.String;kotlin.Throwable?){}[0]
+}
+
+final fun io.github.kormium.sqlitewasm/decodeSqliteWasmParams(kotlin.js/JsArray<kotlin.js/JsAny?>): kotlin.collections/List<kotlin/Any?> // io.github.kormium.sqlitewasm/decodeSqliteWasmParams|decodeSqliteWasmParams(kotlin.js.JsArray<kotlin.js.JsAny?>){}[0]
+final fun io.github.kormium.sqlitewasm/encodeSqliteWasmParams(kotlin.collections/List<kotlin/Any?>): kotlin.js/JsArray<kotlin.js/JsAny?> // io.github.kormium.sqlitewasm/encodeSqliteWasmParams|encodeSqliteWasmParams(kotlin.collections.List<kotlin.Any?>){}[0]
+final suspend fun io.github.kormium.sqlitewasm/openSqliteWasm(io.github.kormium.sqlitewasm/SqliteWasmStorage = ...): io.github.kormium.sqlitewasm/SqliteWasmConnection // io.github.kormium.sqlitewasm/openSqliteWasm|openSqliteWasm(io.github.kormium.sqlitewasm.SqliteWasmStorage){}[0]

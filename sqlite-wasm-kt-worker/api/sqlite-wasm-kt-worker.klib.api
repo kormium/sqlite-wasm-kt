@@ -1,0 +1,9 @@
+// Klib ABI Dump
+// Targets: [wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <io.github.kormium:sqlite-wasm-kt-worker>
+final fun io.github.kormium.sqlitewasm.worker/main() // io.github.kormium.sqlitewasm.worker/main|main(){}[0]
