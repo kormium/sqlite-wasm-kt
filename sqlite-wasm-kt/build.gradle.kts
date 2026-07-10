@@ -40,6 +40,9 @@ kotlin {
 }
 
 mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
     configure(
         com.vanniktech.maven.publish.KotlinMultiplatform(
             javadocJar = com.vanniktech.maven.publish.JavadocJar.Empty(),
