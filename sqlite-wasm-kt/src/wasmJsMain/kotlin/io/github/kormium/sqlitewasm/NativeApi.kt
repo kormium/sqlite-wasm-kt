@@ -19,8 +19,13 @@ internal fun newInMemoryDb(sqlite3: JsAny): NativeDb = js("new sqlite3.oo1.DB(':
  * OPFS-backed, persisted, multi-connection-capable via the `opfs-wl` VFS (Web Locks +
  * `Atomics.waitAsync`, SQLite 3.53.0+). Must be constructed from within a Worker — OPFS access
  * handles are Worker-only by spec, same as every other OPFS-backed VFS.
+ *
+ * Flags are `'c'` (create) only — NOT `'ct'` as in the upstream opfs-wl demo this was first
+ * copied from: `t` means per-statement SQL tracing to `console.log`, which silently taxes every
+ * statement (string-formatting multi-KB batch INSERTs, console I/O) — a real, measured drag, not
+ * just noise.
  */
-internal fun newOpfsWlDb(sqlite3: JsAny, path: String): NativeDb = js("new sqlite3.oo1.OpfsWlDb(path, 'ct')")
+internal fun newOpfsWlDb(sqlite3: JsAny, path: String): NativeDb = js("new sqlite3.oo1.OpfsWlDb(path, 'c')")
 
 /** `db.exec()` options for a write (`INSERT`/`UPDATE`/`DELETE`/DDL): no result rows expected. */
 internal fun writeExecOptions(sql: String, bind: JsArray<JsAny?>): JsAny =
