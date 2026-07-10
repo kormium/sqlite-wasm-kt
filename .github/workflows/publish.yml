@@ -1,0 +1,89 @@
+name: Publish
+
+# Manual-only release, mirroring kormium/decimal. Publishing is irreversible (Maven Central
+# forever, npm after 72h), so nothing fires automatically — a maintainer dispatches this
+# explicitly, choosing the ref and whether to also publish the npm worker package.
+#
+# Required repository secrets:
+#   MAVEN_CENTRAL_USERNAME / MAVEN_CENTRAL_PASSWORD — Central Portal user token
+#   SIGNING_IN_MEMORY_KEY / SIGNING_IN_MEMORY_KEY_PASSWORD — ASCII-armored GPG key + password
+#   NPM_TOKEN — npm automation token with publish rights to @kormium (only if publish_npm)
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to publish from (release tag, e.g. v0.1.0, or a branch)."
+        required: true
+        default: main
+      publish_npm:
+        description: "Also publish @kormium/sqlite-wasm-worker to npm (needs NPM_TOKEN)."
+        type: boolean
+        default: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create/update the GitHub Release for the published tag
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Publish sqlite-wasm-kt to Maven Central Portal
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+        run: ./gradlew publishToMavenCentral --no-configuration-cache --console=plain
+
+      - name: Stage the worker npm package
+        if: inputs.publish_npm
+        run: ./gradlew :sqlite-wasm-kt-worker:stageNpmPackage --console=plain
+
+      - name: Publish @kormium/sqlite-wasm-worker to npm
+        if: inputs.publish_npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          cd sqlite-wasm-kt-worker/npm-package
+          npm publish --access public
+
+      # When publishing from a version tag (vX.Y.Z), publish a matching GitHub Release whose
+      # notes are the changelog section for that version. Idempotent; skipped for branches.
+      - name: Create GitHub Release from CHANGELOG
+        if: startsWith(inputs.ref, 'v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF: ${{ inputs.ref }}
+        run: |
+          version="${REF#v}"
+          notes=$(awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" { f=1; next }
+            /^## \[/ && f { exit }
+            f { print }
+          ' CHANGELOG.md)
+          title=$(grep -m1 "^## \[$version\]" CHANGELOG.md | sed -E "s/^## \[$version\]/v$version/")
+          [ -n "$title" ] || title="$REF"
+          if [ -z "$notes" ]; then
+            notes_args=(--generate-notes)
+          else
+            printf '%s\n' "$notes" > /tmp/release-notes.md
+            notes_args=(--notes-file /tmp/release-notes.md)
+          fi
+          if gh release view "$REF" >/dev/null 2>&1; then
+            gh release edit "$REF" --title "$title" "${notes_args[@]}"
+          else
+            gh release create "$REF" --title "$title" --verify-tag "${notes_args[@]}"
+          fi

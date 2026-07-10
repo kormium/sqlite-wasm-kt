@@ -2,8 +2,17 @@
   "name": "@kormium/sqlite-wasm-worker",
   "version": "0.1.0",
   "description": "Standalone Worker RPC endpoint over kormium/sqlite-wasm-kt's SqliteWasmConnection. Built by :sqlite-wasm-kt-worker. Raw ESM (not webpack-bundled) so a consumer's own bundler can trace and emit @sqlite.org/sqlite-wasm's asset dependencies itself.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kormium/sqlite-wasm-kt.git",
+    "directory": "sqlite-wasm-kt-worker"
+  },
   "type": "module",
   "main": "dist/sqlite-wasm-kt-workspace-sqlite-wasm-kt-worker.mjs",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "@sqlite.org/sqlite-wasm": "3.53.0-build1"
   }

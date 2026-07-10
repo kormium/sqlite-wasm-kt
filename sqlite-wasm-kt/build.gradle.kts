@@ -45,4 +45,34 @@ mavenPublishing {
             javadocJar = com.vanniktech.maven.publish.JavadocJar.Empty(),
         ),
     )
+
+    pom {
+        name.set("sqlite-wasm-kt")
+        description.set(
+            "Kotlin/Wasm bindings for the official @sqlite.org/sqlite-wasm — suspend-friendly " +
+                "SQLite in the browser, in-memory or persistent OPFS via the opfs-wl VFS.",
+        )
+        inceptionYear.set("2026")
+        url.set("https://github.com/kormium/sqlite-wasm-kt")
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+            }
+        }
+        developers {
+            developer {
+                id.set("knyazevs")
+                name.set("Sergey Knyazev")
+                email.set("sknyazev@vk.com")
+                url.set("https://github.com/knyazevs")
+            }
+        }
+        scm {
+            url.set("https://github.com/kormium/sqlite-wasm-kt")
+            connection.set("scm:git:git://github.com/kormium/sqlite-wasm-kt.git")
+            developerConnection.set("scm:git:ssh://git@github.com/kormium/sqlite-wasm-kt.git")
+        }
+    }
 }
